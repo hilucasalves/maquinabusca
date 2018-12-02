@@ -27,6 +27,10 @@ public class ColetorService {
   @Autowired
   private LinkRepository lr;
 
+  public int atualizarDataUltimaColeta (String host, LocalDateTime dataUltimaColeta) {
+    return lr.updateLastCrawlingDate (dataUltimaColeta, host);
+  }
+
   public Long contarLinkPorIntervaloDeIdentificacao (Long id1, Long id2) {
     return lr.countLinkByIdRange (id1, id2);
   }
@@ -197,6 +201,7 @@ public class ColetorService {
     return lr.getInLexicalOrder ();
   }
 }
+
 
 /*
         Hashtable historico = new Hashtable();

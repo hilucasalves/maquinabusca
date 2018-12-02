@@ -10,4 +10,8 @@ public interface DocumentoRepository extends JpaRepository<Documento, Long> {
   List<Documento> findAll ();
 
   Documento findById (long id);
+
+  @Override
+  Documento save (Documento documento);
+
 }

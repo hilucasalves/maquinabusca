@@ -1,7 +1,9 @@
 package com.maquinadebusca.app.controller;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.maquinadebusca.app.mensagem.Mensagem;
 import com.maquinadebusca.app.model.Link;
 import com.maquinadebusca.app.model.UrlsSementes;
@@ -10,8 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.maquinadebusca.app.model.service.ColetorService;
+import java.time.LocalDateTime;
+import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -168,7 +173,7 @@ public class Coletor {
   public ResponseEntity listarPagina () {
     return new ResponseEntity (cs.buscarPagina (), HttpStatus.OK);
   }
-  
+
   // Request for: http://localhost:8080/coletor/link/intervalo/{id1}/{id2}
   @GetMapping (value = "/link/intervalo/{id1}/{id2}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity encontrarLinkPorIntervaloDeId (@PathVariable (value = "id1") Long id1, @PathVariable (value = "id2") Long id2) {
@@ -179,5 +184,13 @@ public class Coletor {
   @GetMapping (value = "/link/intervalo/contar/{id1}/{id2}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity contarLinkPorIntervaloDeId (@PathVariable (value = "id1") Long id1, @PathVariable (value = "id2") Long id2) {
     return new ResponseEntity (cs.contarLinkPorIntervaloDeIdentificacao (id1, id2), HttpStatus.OK);
+  }
+
+  // Request for: http://localhost:8080/coletor/link/ultima/coleta/{host}/{data}
+  @PutMapping (value = "/link/ultima/coleta/{host}/{data}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  public ResponseEntity atualizarUltimaColeta (@PathVariable (value = "host") String host, @PathVariable (value = "data") @DateTimeFormat (iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime data) {
+    int n = cs.atualizarDataUltimaColeta (host, data);
+    ResponseEntity resposta = new ResponseEntity (new Mensagem ("sucesso", "número de registros atualizados: " + n), HttpStatus.OK);
+    return resposta;
   }
 }
