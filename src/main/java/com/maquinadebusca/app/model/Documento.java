@@ -33,8 +33,8 @@ public class Documento implements Serializable {
     static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id = -1L;
 
     @NotBlank
     private String url;
@@ -164,13 +164,13 @@ public class Documento implements Serializable {
         this.indiceInvertido = indiceInvertido;
     }
 
-    public void inserirTermo(Termo termo) {
+    public void inserirTermo(TermoDocumento termo) {
         IndiceInvertido entradaIndiceInvertido = new IndiceInvertido(termo, this); // Cria uma nova entrada para o índice invertido com o termo informado como parâmetro e com o documento corrente.
         this.indiceInvertido.add(entradaIndiceInvertido); // Insere a nova entrada no índice invertido do documento corrente.
         termo.getIndiceInvertido().add(entradaIndiceInvertido); // Insere a nova entrada no índice invertido do termo que foi informado como parâmetro.
     }
 
-    public void removeTermo(Termo termo) {
+    public void removeTermo(TermoDocumento termo) {
         Iterator<IndiceInvertido> iterator = this.indiceInvertido.iterator();
         while (iterator.hasNext()) {
             IndiceInvertido entradaIndiceInvertido = iterator.next();

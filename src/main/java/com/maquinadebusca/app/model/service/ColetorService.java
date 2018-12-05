@@ -20,7 +20,7 @@ import org.springframework.data.domain.Sort;
 
 @Service
 public class ColetorService {
-
+    
   @Autowired
   private DocumentoRepository dr;
 
@@ -123,22 +123,25 @@ public class ColetorService {
     return documentos;
   }
 
-  public Documento coletar (String urlDocumento) {
+    public Documento coletar (String urlDocumento) {
     Documento documento = new Documento ();
 
     try {
       Link link = new Link ();
       Document d = Jsoup.connect (urlDocumento).get ();
       Elements urls = d.select ("a[href]");
-
+      
       documento.setUrl (urlDocumento);
       documento.setTexto (d.html ());
       documento.setVisao (d.text ());
 
       link.setUrl (urlDocumento);
       link.setUltimaColeta (LocalDateTime.now ());
+      
       link.addDocumento (documento);
+      System.out.println(link.toString());
       documento.addLink (link);
+        
       int i = 0;
       for (Element url : urls) {
         i++;
